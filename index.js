@@ -26,40 +26,33 @@ const scoutUserOptions = {
   }
 };
 
-exports.handler = (event, context, callback) => {
+exports.handler = async (event, context, callback) => {
   console.log('Got an event');
+  try {
+    const authBody = {
+      consumer_key: process.env.CONSUMER_KEY,
+      code: event.query.code
+    };
+    finalAuthorizeOptions.body = JSON.stringify(authBody);
 
-  var authBody = {
-    consumer_key: process.env.CONSUMER_KEY,
-    code: event.query.code
-  };
-  finalAuthorizeOptions.body = JSON.stringify(authBody);
+    const body = await rp(finalAuthorizeOptions);
+    let jsonBody = JSON.parse(body);
+    console.log(jsonBody);
+    const redir =
+      `${event.query.redirect_uri}?#state=${event.query.state}` +
+      `&token_type=Bearer&access_token=${jsonBody.username}`;
+    console.log('final redir link is: ' + redir);
 
-  rp(finalAuthorizeOptions)
-    .then(async body => {
-      let jsonBody = JSON.parse(body);
-      console.log(jsonBody);
-      let redir =
-        event.query.redirect_uri +
-        '?#state=' +
-        event.query.state +
-        '&token_type=Bearer&access_token=' +
-        jsonBody.username;
-      console.log('final redir link is: ' + redir);
-
-      // Save the username/token to the DB for later use in flow.
-      const suBody = {
-        userid: jsonBody.username,
-        access_token: jsonBody.access_token
-      };
-      scoutUserOptions.body = JSON.stringify(suBody);
-      console.log('calling with scoutUserOptions: ', scoutUserOptions);
-      const result = await rp(scoutUserOptions);
-      console.log('result', JSON.parse(body));
-      context.succeed({ location: redir });
-    })
-    .catch(function(err) {
-      console.log('Call failed' + err);
-      context.succeed({ message: 'some info' });
-    });
+    // Give user/token to Scout
+    const suBody = {
+      userid: jsonBody.username,
+      access_token: jsonBody.access_token
+    };
+    scoutUserOptions.body = JSON.stringify(suBody);
+    await rp(scoutUserOptions);
+    context.succeed({ location: redir });
+  } catch (err) {
+    console.log('Call failed' + err);
+    context.succeed({ message: 'some info' });
+  }
 };
