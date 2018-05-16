@@ -13,8 +13,7 @@ const finalAuthorizeOptions = {
   body: '',
   headers: {
     'Content-Type': 'application/json; charset=UTF-8',
-    'X-Accept': 'application/json',
-    'x-access-token': process.env.JWOT_TOKEN
+    'X-Accept': 'application/json'
   }
 };
 
@@ -23,7 +22,8 @@ const scoutUserOptions = {
   method: 'POST',
   body: '',
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'x-access-token': process.env.JWOT_TOKEN
   }
 };
 
