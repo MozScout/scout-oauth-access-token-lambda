@@ -22,7 +22,8 @@ const scoutUserOptions = {
   method: 'POST',
   body: '',
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'x-access-token': process.env.JWOT_TOKEN
   }
 };
 
@@ -53,6 +54,6 @@ exports.handler = async (event, context, callback) => {
     context.succeed({ location: redir });
   } catch (err) {
     console.log('Call failed' + err);
-    context.succeed({ message: 'some info' });
+    context.succeed({ message: `Error: ${err}` });
   }
 };
