@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "request": "^2.83.0",
+    "request": "2.88.0",
     "request-promise": "^4.2.2"
   },
   "author": "Tamara Hills",
