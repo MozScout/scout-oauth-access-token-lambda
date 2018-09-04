@@ -27,7 +27,7 @@ const scoutUserOptions = {
   }
 };
 
-exports.handler = async (event, context, callback) => {
+exports.handler = async (event, context) => {
   console.log('Got an event');
   try {
     const authBody = {
@@ -54,6 +54,6 @@ exports.handler = async (event, context, callback) => {
     context.succeed({ location: redir });
   } catch (err) {
     console.log('Call failed' + err);
-    context.succeed({ message: `Error: ${err}` });
+    context.fail({ message: `Error: ${err}` });
   }
 };
