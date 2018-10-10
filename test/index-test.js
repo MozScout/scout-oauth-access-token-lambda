@@ -32,8 +32,8 @@ describe('handler', function() {
       .expectSucceed(result => {
         expect(result.location).to.exist;
         expect(result.location).to.equal(
-          'redirect_uri?#state=final&token_type=Bearer' +
-            '&access_token=existing-user@test.com'
+          `redirect_uri?#state=final&token_type=Bearer` +
+            `&access_token=${encodeURIComponent('existing-user@test.com')}`
         );
       });
   });

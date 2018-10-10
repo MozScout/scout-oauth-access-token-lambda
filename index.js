@@ -39,9 +39,10 @@ exports.handler = async (event, context) => {
     const body = await rp(finalAuthorizeOptions);
     let jsonBody = JSON.parse(body);
     console.log(jsonBody);
+    const encodedUsername = encodeURIComponent(jsonBody.username);
     const redir =
       `${event.query.redirect_uri}?#state=${event.query.state}` +
-      `&token_type=Bearer&access_token=${jsonBody.username}`;
+      `&token_type=Bearer&access_token=${encodedUsername}`;
     console.log('final redir link is: ' + redir);
 
     // Give user/token to Scout
